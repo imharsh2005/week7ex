@@ -4,6 +4,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
+/**
+* @author Some javadoc. // OK
+*/
 public class Calculator {
         final static int umlNUMBER1 = 3;
 	@Cacheable("sum")
