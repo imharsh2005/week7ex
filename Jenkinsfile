@@ -35,36 +35,36 @@ spec:
            - key: .dockerconfigjson
              path: config.json
 ''') {
-node(POD_LABEL) {
-	stage('debug') {
-		echo env.GIT_BRANCH			
-	}
-   stage('Build a gradle project') {
-	git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-	container('gradle') {
-	stage('Build a gradle project') {
-		sh '''
-		pwd
-		cd Chapter08/sample1/
-		chmod +x gradlew
-		./gradlew build
-		mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
-		'''
+	node(POD_LABEL) {
+		stage('debug') {
+			echo env.GIT_BRANCH			
 		}
-	  }
-	}
-  stage('Build Java Image') {
-	container('kaniko') {
 		stage('Build a gradle project') {
-			sh '''
-				echo 'FROM openjdk:8-jre' > Dockerfile
-				echo 'COPY ./app.jar app.jar' >> Dockerfile
-				echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
-				mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
-				/kaniko/executor --context `pwd` --destination imharsh2005/hello-kaniko:1.0
+			git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
+			container('gradle') {
+			stage('Build a gradle project') {
+				sh '''
+				pwd
+				cd Chapter08/sample1/
+				chmod +x gradlew
+				./gradlew build
+				mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 				'''
+				}
+			}
+		}
+		stage('Build Java Image') {
+			container('kaniko') {
+				stage('Build a gradle project') {
+					sh '''
+						echo 'FROM openjdk:8-jre' > Dockerfile
+						echo 'COPY ./app.jar app.jar' >> Dockerfile
+						echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
+						mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
+						/kaniko/executor --context `pwd` --destination imharsh2005/hello-kaniko:1.0
+						'''
+				}
+			}
 		}
 	}
-   }
-}
 }
