@@ -68,12 +68,12 @@ triggers {
 	   steps {
 		echo "I am a master branch"
 		// git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-		container('gradle') {
-		
+		container('gradle') {	
 			sh '''
 			pwd
 			cd Chapter08/sample1/
 			chmod +x gradlew
+			./gradlew task
 			./gradlew build
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 			'''
