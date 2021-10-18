@@ -33,8 +33,8 @@ spec:
        claimName: jenkins-pv-claim
    - name: kaniko-secret
      secret:
-	 secretName: dockercred
-	 items:
+         secretName: dockercred
+         items:
 	   - key: .dockerconfigjson
 	     path: config.json
 '''
