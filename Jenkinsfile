@@ -13,9 +13,9 @@ spec:
      args:
      - 99d
      volumeMounts:
-   - name: shared-storage
+     - name: shared-storage
      mountPath: /mnt 
-     - name: kaniko
+   - name: kaniko
      image: gcr.io/kaniko-project/executor:debug
      command:
      - sleep
