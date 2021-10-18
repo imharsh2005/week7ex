@@ -44,7 +44,7 @@ task acceptanceTest(type: Test) {
 }
 
 task smokeTest(type: Test) {
-	include '**/acceptance/**'
+	include '**/smoke/**'
 	systemProperties System.getProperties()
 }
 /*
