@@ -39,46 +39,46 @@ spec:
              path: config.json
 '''
 	}
-}
+} 
 stages {
-		stage('debug') {
-			echo env.GIT_BRANCH			
+   stage('debug') {
+    steps {
+      echo env.GIT_BRANCH
+      echo env.GIT_LOCAL_BRANCH
 		}
-		 stage('feature') {
-			if (env.GIT_BRANCH == "origin/feature") {
-					try{
-						sh '''
-						pwd
-						./gradlew checkstyleMain
-						#./gradlew jacocoTestReport 
-						'''
-						}
-						catch(all){
-							echo "Catch"
-						}
-						publishHTML(target: [
-							reportDir: 'Chapter08/sample1/build/reports/checkstyle',
-							reportFiles: 'main.html',
-							reportName: "JaCoCo CheckStyle"])
-			 } else {
-				echo "not a feature brnach"
-			 }   
-		   }
-		  stage('CodeCoverage') {
-			if (env.GIT_BRANCH == "origin/master") {
-					sh '''
-					pwd 
-					sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
-					./gradlew jacocoTestCoverageVerification 
-					./gradlew jacocoTestReport 
-					'''
-					publishHTML(target: [
-					reportDir: 'build/reports/jacoco/test/html',
-					reportFiles: 'index.html',
-					reportName: "JaCoCo Report"])
-			 } else {
-				echo "not a MASTER brnach"
-			 }                        
-		   }
+	}
+   stage('feature') {
+    when {
+     expression {
+      return env.GIT_BRANCH == "origin/feature"
+     }
     }
+    steps {
+		echo "I am a feature branch"
+		git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
+		container('gradle') {
+		
+			sh '''
+			pwd
+			cd Chapter08/sample1/
+			chmod +x gradlew
+			./gradlew build
+			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
+			'''
+			
+		}	
+	}
+   }
+  stage('playground') {
+     when {
+      expression {
+        return env.GIT_BRANCH == "origin/playground"
+        }
+       }
+       steps {
+          echo "I am a playground branch"
+       }
+    }
+
+ }
 }
