@@ -74,8 +74,8 @@ triggers {
 			cd Chapter08/sample1/
 			chmod +x gradlew	
 			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
-			sed -i 's/exclude '**/acceptance/**'/g' build.gradle
-			sed -i 's/exclude '**/smoke/**'/g' build.gradle
+			sed -i 's/exclude '\''**//acceptance//**'\''/'\'' '\''g' build.gradle
+			sed -i 's/exclude '\''**//smoke//**'\''/'\'' '\''g' build.gradle
 			./gradlew build
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 			'''
