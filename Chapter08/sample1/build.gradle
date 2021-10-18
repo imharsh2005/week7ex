@@ -42,12 +42,12 @@ task acceptanceTest(type: Test) {
 	include '**/acceptance/**'
 	systemProperties System.getProperties()
 }
-
+/*
 task smokeTest(type: Test) {
 	include '**/acceptance/**'
 	systemProperties System.getProperties()
 }
-
+*/
 test {
 	exclude '**/acceptance/**'
 	exclude '**/smoke/**'
