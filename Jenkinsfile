@@ -1,4 +1,7 @@
-podTemplate(yaml: '''
+pipeline{
+agent{
+kubernetes{
+yaml '''
 apiVersion: v1
 kind: Pod
 spec:
@@ -34,37 +37,48 @@ spec:
          items:
            - key: .dockerconfigjson
              path: config.json
-''') {
-	node(POD_LABEL) {
+'''
+	}
+}
+stages {
 		stage('debug') {
 			echo env.GIT_BRANCH			
 		}
-		stage('Build a gradle project') {
-			git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-			container('gradle') {
-			stage('Build a gradle project') {
-				sh '''
-				pwd
-				cd Chapter08/sample1/
-				chmod +x gradlew
-				./gradlew build
-				mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
-				'''
-				}
-			}
-		}
-		stage('Build Java Image') {
-			container('kaniko') {
-				stage('Build a gradle project') {
-					sh '''
-						echo 'FROM openjdk:8-jre' > Dockerfile
-						echo 'COPY ./app.jar app.jar' >> Dockerfile
-						echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
-						mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
-						/kaniko/executor --context `pwd` --destination imharsh2005/hello-kaniko:1.0
+		 stage('feature') {
+			if (env.GIT_BRANCH == "origin/feature") {
+					try{
+						sh '''
+						pwd
+						./gradlew checkstyleMain
+						#./gradlew jacocoTestReport 
 						'''
-				}
-			}
-		}
-	}
+						}
+						catch(all){
+							echo "Catch"
+						}
+						publishHTML(target: [
+							reportDir: 'Chapter08/sample1/build/reports/checkstyle',
+							reportFiles: 'main.html',
+							reportName: "JaCoCo CheckStyle"])
+			 } else {
+				echo "not a feature brnach"
+			 }   
+		   }
+		  stage('CodeCoverage') {
+			if (env.GIT_BRANCH == "origin/master") {
+					sh '''
+					pwd 
+					sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
+					./gradlew jacocoTestCoverageVerification 
+					./gradlew jacocoTestReport 
+					'''
+					publishHTML(target: [
+					reportDir: 'build/reports/jacoco/test/html',
+					reportFiles: 'index.html',
+					reportName: "JaCoCo Report"])
+			 } else {
+				echo "not a MASTER brnach"
+			 }                        
+		   }
+    }
 }
