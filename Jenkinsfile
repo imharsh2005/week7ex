@@ -73,59 +73,9 @@ triggers {
 			pwd
 			cd Chapter08/sample1/
 			chmod +x gradlew	
-			cat <<'EOF' >> build.gradle
-			plugins {
-			id 'org.springframework.boot' version '2.1.3.RELEASE'
-			id 'java'
-			}
-
-			apply plugin: 'io.spring.dependency-management'
-			apply plugin: "jacoco"
-			apply plugin: 'checkstyle'
-
-			group = 'com.leszko'
-			version = '0.0.1-SNAPSHOT'
-			sourceCompatibility = '1.8'
-
-			repositories {
-			mavenCentral()
-			}
-
-			dependencies {
-			implementation 'org.springframework.boot:spring-boot-starter-web'
-			implementation 'com.hazelcast:hazelcast-all:3.12'
-
-			testImplementation 'org.springframework.boot:spring-boot-starter-test'
-			testImplementation("io.cucumber:cucumber-java:4.2.6")
-			testImplementation("io.cucumber:cucumber-junit:4.2.6")
-			}
-
-			jacocoTestCoverageVerification {
-			violationRules {
-			rule {
-			limit {
-			minimum = 0.2
-			}
-			}
-			}
-			}
-
-			checkstyle {
-			checkstyleTest.enabled = false
-			}
-
-			task acceptanceTest(type: Test) {
-			include '**/acceptance/**'
-			systemProperties System.getProperties()
-			}
-
-			task smokeTest(type: Test) {
-			include '**/acceptance/**'
-			systemProperties System.getProperties()
-			}
-
-			jacoco { toolVersion= "0.8.6"}
-			EOF
+			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
+			sed -i 's/exclude '**/acceptance/**'/g' build.gradle
+			sed -i 's/exclude '**/smoke/**'/g' build.gradle
 			./gradlew build
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 			'''
