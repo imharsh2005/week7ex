@@ -1,7 +1,4 @@
-pipeline {
- agent {
-  kubernetes {
-	yaml '''
+podTemplate(yaml: '''
 apiVersion: v1
 kind: Pod
 spec:
@@ -37,51 +34,37 @@ spec:
          items:
            - key: .dockerconfigjson
              path: config.json
-'''
-     }
- }
- triggers {
-    githubPush()
- }
- stages {
-   stage('debug') {
-    steps {
-      echo env.GIT_BRANCH
-      echo env.GIT_LOCAL_BRANCH
+''') {
+node(POD_LABEL) {
+	stage('debug') {
+		echo env.GIT_BRANCH			
+	}
+   stage('Build a gradle project') {
+	git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
+	container('gradle') {
+	stage('Build a gradle project') {
+		sh '''
+		pwd
+		cd Chapter08/sample1/
+		chmod +x gradlew
+		./gradlew build
+		mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
+		'''
+		}
+	  }
+	}
+  stage('Build Java Image') {
+	container('kaniko') {
+		stage('Build a gradle project') {
+			sh '''
+				echo 'FROM openjdk:8-jre' > Dockerfile
+				echo 'COPY ./app.jar app.jar' >> Dockerfile
+				echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
+				mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
+				/kaniko/executor --context `pwd` --destination imharsh2005/hello-kaniko:1.0
+				'''
 		}
 	}
-   stage('feature') {
-    when {
-     expression {
-      return env.GIT_BRANCH == "origin/feature"
-     }
-    }
-    steps {
-		echo "I am a feature branch"
-		git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-		container('gradle') {
-		
-			sh '''
-			pwd
-			cd Chapter08/sample1/
-			chmod +x gradlew
-			./gradlew build
-			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
-			'''
-			
-		}	
-	}
    }
-  stage('playground') {
-     when {
-      expression {
-        return env.GIT_BRANCH == "origin/playground"
-        }
-       }
-       steps {
-          echo "I am a playground branch"
-       }
-    }
-
- }
+}
 }
