@@ -74,7 +74,7 @@ triggers {
 			cd Chapter08/sample1/
 			chmod +x gradlew	
 			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
-			./gradlew build
+			./gradlew build --info
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 			'''
 			
