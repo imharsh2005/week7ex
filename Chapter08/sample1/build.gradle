@@ -48,9 +48,9 @@ task smokeTest(type: Test) {
 	systemProperties System.getProperties()
 }
 
-//test {
-//	exclude '**/acceptance/**'
+test {
+	exclude '**/acceptance/**'
 //	exclude '**/smoke/**'
-//}
+}
 
 jacoco { toolVersion= "0.8.6"}
