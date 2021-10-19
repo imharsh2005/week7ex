@@ -82,6 +82,18 @@ triggers {
 		   
 	      }							   
 	  }
+stage('playground') {
+      when {
+	   expression {
+    	       return env.GIT_BRANCH == "origin/playground"
+	      }
+	   }
+	steps {
+		echo "I am a playground branch"
+		// git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
+		   
+	      }							   
+	  }
       stage('master') {
          when {
   	   expression {
