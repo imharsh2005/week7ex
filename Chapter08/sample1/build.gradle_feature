@@ -24,15 +24,15 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-junit:4.2.6")
 }
 
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.2
-			}
-		}
-	}
-}
+//jacocoTestCoverageVerification {
+//	violationRules {
+//		rule {
+//			limit {
+//				minimum = 0.2
+//			}
+//		}
+//	}
+//}
 
 checkstyle {
 	checkstyleTest.enabled = false
@@ -44,12 +44,13 @@ task acceptanceTest(type: Test) {
 }
 
 task smokeTest(type: Test) {
-	include '**/acceptance/**'
+	include '**/smoke/**'
 	systemProperties System.getProperties()
 }
 
 test {
 	exclude '**/acceptance/**'
-	exclude '**/smoke/**'
+//	exclude '**/smoke/**'
 }
+
 jacoco { toolVersion= "0.8.6"}
