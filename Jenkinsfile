@@ -55,9 +55,32 @@ triggers {
     	       return env.GIT_BRANCH == "origin/feature"
 	      }
 	   }
-      steps { 
-	   echo "I am a feature branch"
-           }							   
+	steps {
+		echo "I am a feature branch"
+		// git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
+		container('gradle') {	
+			sh '''
+			pwd
+			cd Chapter08/sample1/
+			chmod +x gradlew	
+			rm build.gradle
+			mv build.gradle_feature build.gradle
+			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
+			./gradlew build
+			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
+			'''			
+		     }
+		   container('kaniko') {
+			sh '''
+				echo 'FROM openjdk:8-jre' > Dockerfile
+				echo 'COPY ./app.jar app.jar' >> Dockerfile
+				echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
+				mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
+				/kaniko/executor --context `pwd` --destination imharsh2005/calculator-feature:0.1
+				'''
+			}
+		   
+	      }							   
 	  }
       stage('master') {
          when {
