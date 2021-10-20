@@ -115,6 +115,7 @@ stage('playground') {
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
 			'''			
 		     }
+		   echo "master branch build complete..."
 		   container('kaniko') {
 			sh '''
 				echo 'FROM openjdk:8-jre' > Dockerfile
