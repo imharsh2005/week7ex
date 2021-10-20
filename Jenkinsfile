@@ -92,6 +92,7 @@ stage('playground') {
 		echo "I am a playground branch"
 		// git 'https://github.com/imharsh2005/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
 		   
+		 echo "No action to be taken for playground branch!! "
 	      }							   
 	  }
       stage('master') {
