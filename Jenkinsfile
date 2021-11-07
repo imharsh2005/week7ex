@@ -106,11 +106,11 @@ stage('playground') {
 		container('gradle') {	
 			sh '''
 			pwd
-			#cd Chapter08/sample1/
-			cd Chapter09/sample3/
+			cd Chapter08/sample1/
+			#cd Chapter09/sample3/
 			chmod +x gradlew
-			#rm build.gradle
-			#mv build.gradle_master build.gradle
+			rm build.gradle
+			mv build.gradle_master build.gradle
 			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
 			./gradlew build
 			mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
