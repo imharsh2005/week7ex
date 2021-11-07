@@ -106,8 +106,9 @@ stage('playground') {
 		container('gradle') {	
 			sh '''
 			pwd
-			cd Chapter08/sample1/
-			chmod +x gradlew	
+			#cd Chapter08/sample1/
+			cd Chapter09/sample3/
+			chmod +x gradlew
 			rm build.gradle
 			mv build.gradle_master build.gradle
 			sed -i 's/minimum = 0.2/minimum = 0.1/g' build.gradle
@@ -122,7 +123,7 @@ stage('playground') {
 				echo 'COPY ./app.jar app.jar' >> Dockerfile
 				echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
 				mv /mnt/calculator-0.0.1-SNAPSHOT.jar ./app.jar
-				/kaniko/executor --context `pwd` --destination imharsh2005/calculator:1.0
+				/kaniko/executor --context `pwd` --destination imharsh2005/calculator-div:1.0
 				'''
 			}
 		   
