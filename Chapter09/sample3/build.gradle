@@ -33,7 +33,7 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-junit:4.2.6")
 }
 
-jacocoTestCoverageVerification {
+/*jacocoTestCoverageVerification {
 	violationRules {
 		rule {
 			limit {
@@ -41,7 +41,7 @@ jacocoTestCoverageVerification {
 			}
 		}
 	}
-}
+}*/
 
 checkstyle {
 	checkstyleTest.enabled = false
