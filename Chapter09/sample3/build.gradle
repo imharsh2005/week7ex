@@ -47,20 +47,20 @@ checkstyle {
 	checkstyleTest.enabled = false
 }
 
-task acceptanceTest(type: Test) {
-	include '**/acceptance/**'
-	systemProperties System.getProperties()
-}
+//task acceptanceTest(type: Test) {
+//	include '**/acceptance/**'
+//	systemProperties System.getProperties()
+//}
 
-task smokeTest(type: Test) {
-	include '**/acceptance/**'
-	systemProperties System.getProperties()
-}
+//task smokeTest(type: Test) {
+//	include '**/acceptance/**'
+//	systemProperties System.getProperties()
+//}
 
-test {
-	exclude '**/acceptance/**'
-	exclude '**/smoke/**'
-}
+//test {
+//	exclude '**/acceptance/**'
+//	exclude '**/smoke/**'
+//}
 
 flyway {
 	url = 'jdbc:h2:file:/tmp/calculator'
